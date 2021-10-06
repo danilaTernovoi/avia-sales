@@ -1,0 +1,66 @@
+@use '../../sass/colors' as *;
+@use '../../sass/fonts' as *;
+@use '../../sass/mixins' as *;
+
+.ticket {
+  @include ui-box;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: white;
+  min-height: 184px;
+}
+
+.ticket__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket__price {
+  font-family: $opensans-semibold;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 24px;
+  display: flex;
+  align-items: center;
+  color: $main-color;
+}
+
+.ticket__logo {
+  display: block;
+}
+
+.ticket__infoPair {
+  .title,
+  .body {
+    font-family: $opensans-regular;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 18px;
+
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .title {
+    color: $text-ghost;
+  }
+
+  .body {
+    color: $text-dark;
+  }
+}
+
+.ticket__infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ticket__infoRow:not(:first-child) {
+  margin-top: 20px;
+}

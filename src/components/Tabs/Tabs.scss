@@ -1,0 +1,63 @@
+@use '../../sass/mixins' as *;
+@use '../../sass/fonts' as *;
+@use '../../sass/colors' as *;
+@use '../../sass/transitions' as *;
+
+.tabs {
+  @include ui-box;
+  display: flex;
+  border-radius: 12px;
+  min-height: 50px;
+
+  @include table {
+    flex-direction: column;
+  }
+}
+
+.tab {
+  @include cursor;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-basis: 168px;
+  border: 1px solid #dfe5ec;
+  white-space: nowrap;
+  box-sizing: border-box;
+
+  font-family: $opensans-semibold;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #4a4a4a;
+  padding: 0 2px;
+  box-sizing: border-box;
+  flex: 0 1 33.33%;
+  min-height: 50px;
+}
+
+.tab:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.tab:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.tab--active {
+  background-color: $main-color;
+  color: white;
+
+  transition-property: background-color color;
+  transition-duration: $transition-short;
+}
+
+.tab:first-child,
+.tab:last-child {
+  border-radius: 0;
+}

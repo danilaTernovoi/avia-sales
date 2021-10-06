@@ -1,0 +1,35 @@
+@use '../../sass/colors' as *;
+@use '../../sass/fonts' as *;
+@use '../../sass/transitions' as *;
+
+.showMoreButton {
+  background-color: $main-color;
+  font-family: $opensans-semibold;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 5px;
+  color: #ffffff;
+  border: none;
+  outline: none;
+  width: 100%;
+  min-height: 50px;
+
+  transition: background-color $transition-short;
+
+  &:hover {
+    background-color: darken($main-color, 10%);
+  }
+
+  &:active {
+    background-color: darken($main-color, 20%);
+  }
+}

@@ -1,0 +1,58 @@
+@use './colors' as *;
+@use './mixins' as *;
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg {
+  background-color: rgba(navy, 0.1);
+  box-shadow: inset 0 0 0 1px black;
+}
+
+#root {
+  display: grid;
+  grid-template-rows: 160px 1fr;
+  min-height: 100vh;
+}
+
+.main {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  position: relative;
+  padding: 0 10px;
+  box-sizing: border-box;
+
+  @media screen and (max-width: 550px) {
+    flex-direction: column;
+  }
+}
+
+.right-side {
+  width: 100%;
+  max-width: 502px;
+
+  @media screen and (max-width: 550px) {
+    max-width: 100%;
+  }
+}
+
+.tabs,
+.filter {
+  position: sticky;
+  top: 0;
+
+  @media screen and (max-width: 550px) {
+    position: static;
+  }
+}
+
+.tickets {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

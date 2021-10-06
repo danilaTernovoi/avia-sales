@@ -1,0 +1,33 @@
+@mixin cursor {
+  cursor: url(../assets/img/Cursor.png), auto;
+}
+
+@mixin shadow {
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@mixin rounded {
+  border-radius: 5px;
+}
+
+@mixin box-padding {
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+@mixin ui-box {
+  @include rounded();
+  @include shadow();
+}
+
+@mixin table {
+  @media screen and (max-width: 640px) {
+    @content;
+  }
+}
+
+@mixin mobile {
+  @media screen and (max-width: 480px) {
+    @content;
+  }
+}
