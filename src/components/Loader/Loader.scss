@@ -1,0 +1,7 @@
+@use '../../sass/colors';
+@use '../../sass/fonts';
+
+.loader {
+  font-family: fonts.$opensans-semibold;
+  color: colors.$main;
+}

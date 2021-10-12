@@ -1,40 +1,60 @@
-@use '../../sass/colors' as *;
-@use '../../sass/fonts' as *;
-@use '../../sass/mixins' as *;
+@use '../../sass/colors';
+@use '../../sass/fonts';
+@use '../../sass/mixins';
+
+@mixin three-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
 
 .ticket {
-  @include ui-box;
+  @include mixins.ui-box;
   padding: 20px;
   box-sizing: border-box;
-  background-color: white;
+  background-color: colors.$text-light;
   min-height: 184px;
 }
 
 .ticket__header {
-  display: flex;
-  justify-content: space-between;
+  @include three-cols;
+  min-height: 45px;
   align-items: center;
 }
 
 .ticket__price {
-  font-family: $opensans-semibold;
+  font-family: fonts.$opensans-semibold;
   font-style: normal;
   font-weight: 600;
   font-size: 24px;
   line-height: 24px;
   display: flex;
   align-items: center;
-  color: $main-color;
+  color: colors.$main;
+  white-space: nowrap;
 }
 
 .ticket__logo {
   display: block;
+  grid-column: 3/-1;
+}
+
+.ticket__infoRow {
+  @include three-cols;
+}
+
+.ticket__infoRow:not(:first-child) {
+  margin-top: 20px;
 }
 
 .ticket__infoPair {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   .title,
   .body {
-    font-family: $opensans-regular;
+    font-family: fonts.$opensans-regular;
     font-style: normal;
     font-weight: 600;
     font-size: 12px;
@@ -44,23 +64,14 @@
     align-items: center;
     letter-spacing: 0.5px;
     text-transform: uppercase;
+    white-space: nowrap;
   }
 
   .title {
-    color: $text-ghost;
+    color: colors.$text-ghost;
   }
 
   .body {
-    color: $text-dark;
+    color: colors.$text-dark;
   }
-}
-
-.ticket__infoRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.ticket__infoRow:not(:first-child) {
-  margin-top: 20px;
 }

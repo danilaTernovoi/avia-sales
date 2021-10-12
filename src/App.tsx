@@ -1,11 +1,16 @@
 import React from 'react';
 import Logo from './components/Logo';
 import Filter from './components/Filter';
-import Ticket from './components/Ticket';
-import ShowMoreButton from './components/ShowMoreButton';
 import Tabs from './components/Tabs';
+import Ticketlist from './components/TicketList/TicketList';
+
+const sandbox = false;
 
 function App() {
+  if (sandbox) {
+    return <div className="sandbox">sandbox</div>;
+  }
+
   return (
     <>
       <Logo />
@@ -13,14 +18,7 @@ function App() {
         <Filter />
         <div className="right-side">
           <Tabs />
-          <div className="tickets">
-            <Ticket />
-            <Ticket />
-            <Ticket />
-            <Ticket />
-            <Ticket />
-            <ShowMoreButton>Показать еще 5 билетов!</ShowMoreButton>
-          </div>
+          <Ticketlist />
         </div>
       </div>
     </>

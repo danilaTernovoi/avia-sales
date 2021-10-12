@@ -15,31 +15,31 @@ const defaultList: IFilter[] = [
   {
     showName: 'Все',
     alias: ALL_FILTER_ALIAS,
-    active: false,
+    active: true,
   },
 
   {
     showName: 'Без пересадок',
     alias: 'withoutTransfer',
-    active: false,
+    active: true,
   },
 
   {
     showName: '1 пересадка',
     alias: 'oneTransfer',
-    active: false,
+    active: true,
   },
 
   {
     showName: '2 пересадки',
     alias: 'twoTransfer',
-    active: false,
+    active: true,
   },
 
   {
     showName: '3 пересадки',
     alias: 'threeTransfer',
-    active: false,
+    active: true,
   },
 ];
 

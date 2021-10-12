@@ -1,13 +1,13 @@
-@use '../../sass/mixins' as *;
-@use '../../sass/fonts' as *;
-@use '../../sass/colors' as *;
-@use '../../sass/transitions' as *;
+@use '../../sass/mixins';
+@use '../../sass/fonts';
+@use '../../sass/colors';
+@use '../../sass/transitions';
 
 $checkbox-size: 20px;
 
 .filter {
-  @include ui-box;
-  background-color: white;
+  @include mixins.ui-box;
+  background-color: colors.$text-light;
   padding: 10px 0;
   min-width: 232px;
   min-height: 252px;
@@ -19,7 +19,7 @@ $checkbox-size: 20px;
 }
 
 .filter__title {
-  font-family: $opensans-regular;
+  font-family: fonts.$opensans-regular;
   font-style: normal;
   font-weight: 600;
   font-size: 12px;
@@ -28,7 +28,7 @@ $checkbox-size: 20px;
 }
 
 .filterItem__name {
-  font-family: $opensans-semibold;
+  font-family: fonts.$opensans-semibold;
   font-style: normal;
   font-weight: normal;
   font-size: 13px;
@@ -51,7 +51,7 @@ input[type='checkbox'] {
 }
 
 input[type='checkbox']:focus + .visibleCheckbox {
-  outline: 1px solid $main-color;
+  outline: 1px solid colors.$main;
 }
 
 input[type='checkbox']:checked + .visibleCheckbox {
@@ -59,7 +59,7 @@ input[type='checkbox']:checked + .visibleCheckbox {
 }
 
 .filterItem {
-  @include cursor;
+  @include mixins.cursor;
 
   display: flex;
   column-gap: 10px;
@@ -67,7 +67,7 @@ input[type='checkbox']:checked + .visibleCheckbox {
 }
 
 .filterItem__inner {
-  transition: background-color $transition-short;
+  transition: background-color transitions.$transition-short;
 
   &:hover {
     background-color: #f1fcff;

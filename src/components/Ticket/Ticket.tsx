@@ -1,48 +1,60 @@
-import React from 'react';
-import s7Logo from '../../assets/img/S7_Logo.png';
+import React, { FC } from 'react';
+import { buildTime, formatPrice } from '../../libs';
+import { ITicket } from '../../types';
 import './Ticket.scss';
 
-const Ticket = () => (
-  <div className="ticket">
-    <header className="ticket__header">
-      <div className="ticket__price">13 400 Р</div>
-      <img src={s7Logo} alt="s7 logo" className="ticket__logo" />
-    </header>
+interface ITicketProps {
+  ticket: ITicket;
+}
 
-    <div className="ticket__infoRow">
-      <div className="ticket__infoPair">
-        <div className="title">MOW – HKT</div>
-        <div className="body">10:45 – 08:00</div>
-      </div>
+const Ticket: FC<ITicketProps> = ({ ticket }) => {
+  const { price, carrier, segments } = ticket;
 
-      <div className="ticket__infoPair">
-        <div className="title">В пути</div>
-        <div className="body">21ч 15м</div>
-      </div>
+  return (
+    <div className="ticket">
+      <header className="ticket__header">
+        {/* Цена */}
+        <div className="ticket__price">{formatPrice(price)}</div>
+        <img src={`//pics.avs.io/99/36/${carrier}.png`} alt={carrier} className="ticket__logo" />
+      </header>
 
-      <div className="ticket__infoPair">
-        <div className="title">2 пересадки</div>
-        <div className="body">HKG, JNB</div>
-      </div>
+      {segments.map((segment) => {
+        const { duration, fromto } = buildTime(segment);
+        const { origin, destination, stops } = segment;
+        const hasStops = stops.length;
+
+        return (
+          <div className="ticket__infoRow" key={JSON.stringify(segment)}>
+            <div className="ticket__infoPair">
+              <div className="title">
+                {origin} – {destination}
+              </div>
+              <div className="body">{fromto}</div>
+            </div>
+
+            <div className="ticket__infoPair">
+              <div className="title">В пути</div>
+              <div className="body">{duration}</div>
+            </div>
+
+            <div className="ticket__infoPair">
+              <div className="title">
+                {hasStops ? (
+                  <>
+                    {stops.length} пересадк{stops.length > 1 ? 'и' : 'а'}
+                  </>
+                ) : (
+                  <>без пересадок</>
+                )}
+              </div>
+
+              <div className="body">{stops.join(', ')}</div>
+            </div>
+          </div>
+        );
+      })}
     </div>
-
-    <div className="ticket__infoRow">
-      <div className="ticket__infoPair">
-        <div className="title">MOW – HKT</div>
-        <div className="body">10:45 – 08:00</div>
-      </div>
-
-      <div className="ticket__infoPair">
-        <div className="title">В пути</div>
-        <div className="body">21ч 15м</div>
-      </div>
-
-      <div className="ticket__infoPair">
-        <div className="title">2 пересадки</div>
-        <div className="body">HKG, JNB</div>
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 export default Ticket;
