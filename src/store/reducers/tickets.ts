@@ -1,38 +1,111 @@
 import { Dispatch } from 'react';
-import { TicketsAction, TicketsState } from '../types';
+import { ITicket } from '../../types';
+import { TicketsAction } from '../types';
+
+// TICKETS STATE TYPE
+type TicketsState = {
+  list: ITicket[];
+  searchId: string;
+  hasError: boolean;
+  stop: boolean;
+  loading: boolean;
+};
 
 const initialState: TicketsState = {
   list: [],
+  searchId: '',
   hasError: false,
+  stop: false,
   loading: true,
 };
 
-export const loadTickets = () => async (dispatch: Dispatch<TicketsAction>) => {
-  const { searchId } = await fetch(`https://front-test.beta.aviasales.ru/search`).then((data) => data.json());
-  const ticketsResponse = await fetch(`https://front-test.beta.aviasales.ru/tickets?searchId=${searchId}`);
+// ТИПЫ ДЛЯ DISPATCH
+const INITIAL_LOADING = 'INITIAL_LOADING';
+const LOAD_MORE = 'LOAD_MORE';
+const REGISTER_FETCH_ERROR = 'REGISTER_FETCH_ERROR';
+const TOGGLE_LOADING = 'TOGGLE_LOADING';
 
-  if (ticketsResponse.status === 200) {
-    const { tickets } = await ticketsResponse.json();
+// URLS
+const fetchIdURL = 'https://front-test.beta.aviasales.ru/search';
+const fetchTicketsURL = (searchId: string): string =>
+  `https://front-test.beta.aviasales.ru/tickets?searchId=${searchId}`;
 
-    dispatch({ type: 'tickets/fetch', payload: tickets });
-  } else dispatch({ type: 'tickets/registerError' });
+// CREATORS
+export const initialLoading = () => async (dispatch: Dispatch<TicketsAction>) => {
+  const searchIdResponse = await fetch(fetchIdURL);
+
+  if (!searchIdResponse.ok) {
+    return dispatch({ type: REGISTER_FETCH_ERROR });
+  }
+
+  const { searchId } = await searchIdResponse.json();
+  const ticketsResponse = await fetch(fetchTicketsURL(searchId));
+
+  if (!ticketsResponse.ok) {
+    return dispatch({ type: REGISTER_FETCH_ERROR });
+  }
+
+  const { tickets: list, stop } = await ticketsResponse.json();
+
+  return dispatch({
+    type: INITIAL_LOADING,
+    payload: {
+      list,
+      stop,
+      searchId,
+    },
+  });
 };
 
-const ticketsReducer = (state = initialState, action: TicketsAction): TicketsState => {
-  switch (action.type) {
-    case 'tickets/fetch':
+// ЗАГРУЗИТЬ БОЛЬШЕ БИЛЕТОВ
+export const loadMore = (searchId: string) => async (dispatch: Dispatch<TicketsAction>) => {
+  dispatch({ type: TOGGLE_LOADING, payload: true });
+  const ticketsResponse = await fetch(fetchTicketsURL(searchId));
+
+  if (!ticketsResponse.ok) return dispatch({ type: REGISTER_FETCH_ERROR });
+
+  const { tickets: list, stop } = await ticketsResponse.json();
+
+  dispatch({ type: TOGGLE_LOADING, payload: false });
+  return dispatch({
+    type: LOAD_MORE,
+    payload: {
+      list,
+      stop,
+    },
+  });
+};
+
+// РЕДЬЮСЕР
+const ticketsReducer = (state = initialState, { type, payload }: TicketsAction): TicketsState => {
+  switch (type) {
+    case TOGGLE_LOADING:
       return {
         ...state,
-        list: action.payload,
+        loading: payload,
+      };
+
+    case INITIAL_LOADING:
+      return {
+        ...state,
+        ...payload,
         loading: false,
       };
 
-    case 'tickets/registerError':
+    case LOAD_MORE:
       return {
         ...state,
-        loading: false,
-        hasError: true,
+        list: [...state.list, ...payload.list],
+        stop: payload.stop,
       };
+
+    case REGISTER_FETCH_ERROR:
+      return {
+        ...state,
+        hasError: true,
+        loading: false,
+      };
+
     default:
       return state;
   }

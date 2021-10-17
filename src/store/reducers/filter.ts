@@ -1,101 +1,22 @@
-import {
-  TOGGLE_FILTER,
-  APPLY_ALL_FILTER,
-  DISABLE_ALL_FILTER,
-  DISABLE_ALL_ONLY,
-  IFilter,
-  IFilterState,
-  IToggleFilterAction,
-  IAction,
-} from '../types';
+import { FilterAction, FilterState } from '../types';
 
-export const ALL_FILTER_ALIAS: string = 'all';
+export const ALL_FILTER_ALIAS = 'all';
+export const APPLY_FILTER = 'APPLY_FILTER';
 
-const defaultList: IFilter[] = [
-  {
-    showName: 'Все',
-    alias: ALL_FILTER_ALIAS,
-    active: true,
-  },
-
-  {
-    showName: 'Без пересадок',
-    alias: 'withoutTransfer',
-    active: true,
-  },
-
-  {
-    showName: '1 пересадка',
-    alias: 'oneTransfer',
-    active: true,
-  },
-
-  {
-    showName: '2 пересадки',
-    alias: 'twoTransfer',
-    active: true,
-  },
-
-  {
-    showName: '3 пересадки',
-    alias: 'threeTransfer',
-    active: true,
-  },
-];
-
-const initialState: IFilterState = {
-  list: defaultList,
+const initialState: FilterState = {
+  activeAliases: [ALL_FILTER_ALIAS],
 };
 
-const filterReducer = (state: IFilterState = initialState, action: IToggleFilterAction): IFilterState => {
-  switch (action.type) {
-    case TOGGLE_FILTER:
+const filterReducer = (state = initialState, { type, payload }: FilterAction): FilterState => {
+  switch (type) {
+    case APPLY_FILTER:
       return {
-        ...state,
-        list: state.list.map((filt) => (filt.alias === action.payload ? { ...filt, active: !filt.active } : filt)),
-      };
-
-    case APPLY_ALL_FILTER:
-      return {
-        ...state,
-        list: state.list.map((filt) => ({ ...filt, active: true })),
-      };
-
-    case DISABLE_ALL_FILTER:
-      return {
-        ...state,
-        list: state.list.map((filt) => ({ ...filt, active: false })),
-      };
-
-    case DISABLE_ALL_ONLY:
-      return {
-        ...state,
-        list: state.list.map((filt) =>
-          filt.alias === ALL_FILTER_ALIAS || filt.alias === action.payload ? { ...filt, active: !filt.active } : filt
-        ),
+        activeAliases: payload,
       };
 
     default:
-      return state;
+      return { ...state };
   }
 };
 
 export default filterReducer;
-
-export const applyAllCreator = (): IAction => ({
-  type: APPLY_ALL_FILTER,
-});
-
-export const disableAllCreator = (): IAction => ({
-  type: DISABLE_ALL_FILTER,
-});
-
-export const toggleFilterCreator = (alias: string): IToggleFilterAction => ({
-  type: TOGGLE_FILTER,
-  payload: alias,
-});
-
-export const disableAllOnlyCreator = (alias: string): IToggleFilterAction => ({
-  type: DISABLE_ALL_ONLY,
-  payload: alias,
-});

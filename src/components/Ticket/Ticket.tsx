@@ -8,13 +8,18 @@ interface ITicketProps {
 }
 
 const Ticket: FC<ITicketProps> = ({ ticket }) => {
-  const { price, carrier, segments } = ticket;
+  const {
+    price, // Цена билета
+    carrier, // Перевозчик
+    segments, // туда, обратно
+  } = ticket;
 
   return (
     <div className="ticket">
       <header className="ticket__header">
         {/* Цена */}
         <div className="ticket__price">{formatPrice(price)}</div>
+        {/* Логотип перевозчика */}
         <img src={`//pics.avs.io/99/36/${carrier}.png`} alt={carrier} className="ticket__logo" />
       </header>
 

@@ -25,3 +25,4 @@ yarn-error.log*
 API.md
 store/filter/tast.txt
 lesson.ts
+src/components/Sandbox

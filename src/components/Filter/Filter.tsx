@@ -1,63 +1,108 @@
-import React, { useMemo } from 'react';
+import React, { FC, Fragment, useEffect, useState, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import useTypedSelector from '../../hooks/useTypedSelector';
-import {
-  ALL_FILTER_ALIAS,
-  applyAllCreator,
-  disableAllCreator,
-  toggleFilterCreator,
-  disableAllOnlyCreator,
-} from '../../store/reducers/filter';
-import { IFilter } from '../../store/types';
+import { ALL_FILTER_ALIAS, APPLY_FILTER } from '../../store/reducers/filter';
+import { FilterType } from '../../store/types';
+import { filters as callbacks } from '../../libs';
+import FilterCheck from './FilterCheck';
 import './Filter.scss';
 
-const Filter = () => {
-  const { list } = useTypedSelector((state) => state.filter);
+export const filterList: FilterType[] = [
+  {
+    showName: 'Все',
+    alias: ALL_FILTER_ALIAS,
+    active: true,
+    callback: callbacks.allCallback,
+  },
+
+  {
+    showName: 'Без пересадок',
+    alias: 'withoutTransfer',
+    active: true,
+    callback: callbacks.withoutTransferCallback,
+  },
+
+  {
+    showName: '1 пересадка',
+    alias: 'oneTransfer',
+    active: true,
+    callback: callbacks.oneTransferCallback,
+  },
+
+  {
+    showName: '2 пересадки',
+    alias: 'twoTransfer',
+    active: true,
+    callback: callbacks.twoTransferCallback,
+  },
+
+  {
+    showName: '3 пересадки',
+    alias: 'threeTransfer',
+    active: true,
+    callback: callbacks.threeTransferCallback,
+  },
+];
+
+const Filter: FC = () => {
   const dispatch = useDispatch();
+  // Фильтр "Все"
+  const [allFilter, setAllFilter] = useState<FilterType>(filterList[0]);
+  // Остальные фильтры
+  const [filters, setFilters] = useState<FilterType[]>(filterList.slice(1));
+  // Включены ли остальные фильтры
+  const allActive = useMemo(() => filters.filter((filt) => filt.active).length === filters.length, [filters]);
+  // Нужно ли включить фильтр "Все"
+  const oneToTrigger = useMemo(() => filters.filter((filt) => filt.active).length === filters.length - 1, [filters]);
 
-  const { toggleFilterDispatch, applyAllDispatch, disableAllDispatch, disableAllOnlyDispatch } = useMemo(
-    () =>
-      bindActionCreators(
-        {
-          toggleFilterDispatch: toggleFilterCreator,
-          applyAllDispatch: applyAllCreator,
-          disableAllDispatch: disableAllCreator,
-          disableAllOnlyDispatch: disableAllOnlyCreator,
-        },
-        dispatch
+  // Если остальные фильтры включены, включаем "Все"
+  useEffect(() => {
+    if (allActive) setAllFilter((prev) => ({ ...prev, active: true }));
+  }, [allActive]);
+
+  // Если включается последний фильтр из остальных, включем "Все"
+  useEffect(() => {
+    if (oneToTrigger) setAllFilter((prev) => ({ ...prev, active: false }));
+  }, [oneToTrigger]);
+
+  // При изменении состояния остальных фильтров, обновляем список активных фильтров в сторе
+  useEffect(() => {
+    dispatch({
+      type: APPLY_FILTER,
+      payload: filters.filter((filt) => filt.active).map(({ alias }) => alias),
+    });
+  }, [filters, dispatch]);
+
+  // Переключение фильтра "Все"
+  const changeAllFilter = (activeStatus: boolean) => {
+    setAllFilter((prev) => ({ ...prev, active: !prev.active }));
+
+    const futureStatus = !activeStatus;
+    setFilters((prev) => prev.map((filt) => ({ ...filt, active: futureStatus })));
+  };
+
+  // Переключение остальных фильтров
+  const changeFilter = (alias: string) => {
+    setFilters((prev) =>
+      prev.map(
+        (filter): FilterType => ({
+          ...filter,
+          active: filter.alias === alias ? !filter.active : filter.active,
+        }),
       ),
-    [dispatch]
-  );
-
-  const toggleFilter = (alias: string) => {
-    const isall: boolean = alias === ALL_FILTER_ALIAS;
-
-    if (isall) {
-      const allFilter: IFilter | undefined = list.find((filt) => filt.alias === ALL_FILTER_ALIAS);
-      return allFilter?.active ? disableAllDispatch() : applyAllDispatch();
-    }
-
-    const currentWillApply = !list.find((filt) => filt.alias === alias)?.active;
-    const otherEnabled: boolean = list.length - list.filter((filt) => filt.alias !== alias && filt.active).length === 2;
-
-    if (otherEnabled && currentWillApply) return applyAllDispatch();
-    if (!isall && list.every((filt) => filt.active)) return disableAllOnlyDispatch(alias);
-    return toggleFilterDispatch(alias);
+    );
   };
 
   return (
     <div className="filter">
       <h1 className="filter__title">Количество пересадок</h1>
       <ul className="filter__list">
-        {list.map(({ showName, alias, active }) => (
-          <li className="filterItem__inner" key={alias}>
-            <label className="filterItem">
-              <input type="checkbox" checked={active} onChange={() => toggleFilter(alias)} />
-              <div className="visibleCheckbox" />
-              <span className="filterItem__name">{showName}</span>
-            </label>
-          </li>
+        {/* фильтр "все" */}
+        <FilterCheck {...allFilter} onChange={() => changeAllFilter(allFilter.active)} />
+        {/* остальные фильтры */}
+        {filters.map((filter) => (
+          <Fragment key={filter.showName}>
+            <FilterCheck {...filter} onChange={() => changeFilter(filter.alias)} />
+          </Fragment>
         ))}
       </ul>
     </div>

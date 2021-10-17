@@ -1,8 +1,12 @@
 import React, { FC } from 'react';
 import './ShowMoreButton.scss';
 
-const ShowMoreButton: FC = ({ children }) => (
-  <button className="showMoreButton" type="button">
+interface Props {
+  onClick: () => void;
+}
+
+const ShowMoreButton: FC<Props> = ({ children, onClick }) => (
+  <button className="showMoreButton" type="button" onClick={() => onClick()}>
     {children}
   </button>
 );

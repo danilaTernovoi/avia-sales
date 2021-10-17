@@ -6,28 +6,32 @@ export interface IAction {
 }
 
 // FILTERS
-export const TOGGLE_FILTER = 'TOGGLE_FILTER';
-export const APPLY_ALL_FILTER = 'APPLY_ALL_FILTER';
-export const DISABLE_ALL_FILTER = 'DISABLE_ALL_FILTER';
-export const DISABLE_ALL_ONLY = 'DISABLE_ALL_ONLY';
-
-export interface IToggleFilterAction extends IAction {
-  payload: string;
-}
-
+// eslint-disable-next-line no-unused-vars
+export type FilterCallback = (ticket: ITicket) => boolean;
 export interface IFilter {
+  // имя, отображаемое в UI
   showName: string;
+  // псевдоним фильтра
   alias: string;
+  // включён ли фильтр
   active: boolean;
-  allStatus?: boolean;
+  // callback
+  callback: FilterCallback;
 }
+
+export type FilterType = IFilter;
 
 export interface IFilterState {
-  list: IFilter[];
+  activeAliases: string[];
+}
+
+export type FilterState = IFilterState;
+
+export interface FilterAction extends IAction {
+  payload: string[];
 }
 
 // TICKETS
-
 interface ITicketsState {
   list: TicketList;
   hasError: boolean;
@@ -35,10 +39,25 @@ interface ITicketsState {
 }
 
 interface ITicketsFetchAction extends IAction {
-  payload: TicketList;
+  payload: {
+    searchId: string;
+    stop: boolean;
+    list: Ticket[];
+  };
+}
+
+interface ITicketsLoadMoreAction extends IAction {
+  payload: {
+    stop: boolean;
+    list: Ticket[];
+  };
+}
+
+interface ITicketsToggleLoadingAction extends IAction {
+  payload: boolean;
 }
 
 export type Ticket = ITicket;
 export type TicketList = ITicket[];
-export type TicketsAction = IAction | ITicketsFetchAction;
+export type TicketsAction = IAction | ITicketsFetchAction | ITicketsLoadMoreAction | ITicketsToggleLoadingAction;
 export type TicketsState = ITicketsState;
