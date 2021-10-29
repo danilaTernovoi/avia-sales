@@ -25,3 +25,23 @@ export interface IBuildTime {
   duration: string;
   fromto: string;
 }
+
+// eslint-disable-next-line no-unused-vars
+export type FilterCallback = (ticket: ITicket) => boolean;
+
+export interface IFilter {
+  alias: string;
+  showName: string;
+  active: boolean;
+  callback: FilterCallback;
+}
+
+export interface Tab {
+  alias: SortGuard;
+  active: boolean;
+  showName: string;
+}
+
+export type FilterType = IFilter;
+
+export type SortGuard = 'priceless' | 'timeless';

@@ -1,10 +1,10 @@
-import { Ticket } from '../store/types';
+import { ITicket } from '../types';
 
-export function priceless(prevTicket: Ticket, nextTicket: Ticket): number {
+export function priceless(prevTicket: ITicket, nextTicket: ITicket): number {
   return prevTicket.price - nextTicket.price;
 }
 
-export function timeless(prevTicket: Ticket, nextTicket: Ticket): number {
+export function timeless(prevTicket: ITicket, nextTicket: ITicket): number {
   const nextTotalDuration = nextTicket.segments.reduce((total, segment) => {
     let $total = total;
     $total += segment.duration;

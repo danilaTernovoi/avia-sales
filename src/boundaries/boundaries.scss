@@ -1,0 +1,14 @@
+@use '../sass/colors';
+@use '../sass/fonts';
+
+.error__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.error__title {
+  font-family: fonts.$opensans-semibold;
+  color: colors.$error;
+  font-size: 40px;
+}

@@ -1,29 +1,18 @@
-import React, { FC, useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { SortGuard, applySort } from '../../store/reducers/sorters';
+import React, { FC, useEffect, useState } from 'react';
+import { useActions } from '../../hooks';
+import { SortActionPayloadGuard } from '../../store/reducers/sort/types';
+import { Tab } from '../../types';
+import { TabCollection } from '../../utils/constants';
 import './Tabs.scss';
 
-interface Tab {
-  alias: SortGuard;
-  active: boolean;
-  showName: string;
-}
-
 const Tabs: FC = () => {
-  const dispatch = useDispatch();
-  const [tabs, setTabs] = useState<Tab[]>([
-    {
-      showName: 'Самый дешевый',
-      active: true,
-      alias: 'priceless',
-    },
+  const [tabs, setTabs] = useState<Tab[]>(TabCollection);
+  const { setSort } = useActions();
 
-    {
-      showName: 'Самый быстрый',
-      active: false,
-      alias: 'timeless',
-    },
-  ]);
+  useEffect(() => {
+    const activeSort = tabs.find((sort) => sort.active);
+    setSort(activeSort?.alias as SortActionPayloadGuard);
+  }, [tabs, setSort]);
 
   return (
     <div className="tabs">
@@ -39,8 +28,6 @@ const Tabs: FC = () => {
                   tab.alias === alias ? { ...tab, active: tab.active ? true : !tab.active } : { ...tab, active: false },
               ),
             );
-
-            dispatch(applySort(alias as SortGuard));
           }}
         >
           {showName}

@@ -6,11 +6,9 @@
   @include bg;
 }
 
-.error {
-  font-family: fonts.$opensans-semibold;
-  color: crimson;
-  font-size: 32px;
-  text-align: center;
+.fullHeight {
+  @include center;
+  min-height: 100vh;
 }
 
 .center {
@@ -32,6 +30,7 @@
   position: relative;
   padding: 0 10px;
   box-sizing: border-box;
+  padding-bottom: 10px;
 
   @media screen and (max-width: 550px) {
     flex-direction: column;

@@ -1,6 +1,16 @@
+@use '../../sass/colors';
+@use '../../sass/fonts';
+
 .tickets {
   margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.no-satisfied {
+  font-family: fonts.$opensans-regular;
+  font-size: 30px;
+  color: colors.$main;
+  text-align: center;
 }

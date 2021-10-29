@@ -3,9 +3,10 @@
 import { ITicket } from '../types';
 
 type FilterCallbackSignature = (ticket: ITicket) => boolean;
+
 const stopsEqual = (ticket: ITicket, equalTo: number): boolean => {
   const [from, to] = ticket.segments;
-  return from.stops.length + to.stops.length === equalTo;
+  return from.stops.length === equalTo;
 };
 
 export const allCallback: FilterCallbackSignature = (ticket: ITicket) => !!ticket;

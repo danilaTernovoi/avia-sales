@@ -1,17 +1,17 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import store from './store';
-
 import App from './App';
-import 'normalize.css/normalize.css';
+import InitialBoundary from './boundaries';
+import store from './store';
 import './sass/index.scss';
+import 'normalize.css/normalize.css';
 
-const root = document.getElementById('root');
-
-ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  root,
+render(
+  <InitialBoundary>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </InitialBoundary>,
+  document.getElementById('root'),
 );

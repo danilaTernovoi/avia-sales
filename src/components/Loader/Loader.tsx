@@ -3,10 +3,7 @@ import './Loader.scss';
 
 const Loader: FC = () => (
   <div className="loader-container">
-    <div className="lds-roller">
-      <div />
-      <div />
-      <div />
+    <div className="lds-ripple">
       <div />
       <div />
     </div>

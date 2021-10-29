@@ -1,19 +1,21 @@
 import React, { FC } from 'react';
-import Logo from './components/Logo';
+
+// COMPONENTS
 import Filter from './components/Filter';
+import Logo from './components/Logo';
 import Tabs from './components/Tabs';
-import Ticketlist from './components/TicketList/TicketList';
+import Ticketlist from './components/TicketList';
 
 const App: FC = () => (
   <>
     <Logo />
-    <div className="main">
+    <main className="main">
       <Filter />
       <div className="right-side">
         <Tabs />
         <Ticketlist />
       </div>
-    </div>
+    </main>
   </>
 );
 

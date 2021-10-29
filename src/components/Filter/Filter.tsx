@@ -1,56 +1,23 @@
 import React, { FC, Fragment, useEffect, useState, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
-import { ALL_FILTER_ALIAS, APPLY_FILTER } from '../../store/reducers/filter';
-import { FilterType } from '../../store/types';
-import { filters as callbacks } from '../../libs';
+import { FilterType } from '../../types';
+import { filterList } from '../../utils/constants';
+import { useActions } from '../../hooks';
+import { FilterGuard } from '../../store/reducers/filter/types';
 import FilterCheck from './FilterCheck';
 import './Filter.scss';
 
-export const filterList: FilterType[] = [
-  {
-    showName: 'Все',
-    alias: ALL_FILTER_ALIAS,
-    active: true,
-    callback: callbacks.allCallback,
-  },
-
-  {
-    showName: 'Без пересадок',
-    alias: 'withoutTransfer',
-    active: true,
-    callback: callbacks.withoutTransferCallback,
-  },
-
-  {
-    showName: '1 пересадка',
-    alias: 'oneTransfer',
-    active: true,
-    callback: callbacks.oneTransferCallback,
-  },
-
-  {
-    showName: '2 пересадки',
-    alias: 'twoTransfer',
-    active: true,
-    callback: callbacks.twoTransferCallback,
-  },
-
-  {
-    showName: '3 пересадки',
-    alias: 'threeTransfer',
-    active: true,
-    callback: callbacks.threeTransferCallback,
-  },
-];
-
 const Filter: FC = () => {
-  const dispatch = useDispatch();
+  const { setFilter: setFilterStore } = useActions();
+
   // Фильтр "Все"
   const [allFilter, setAllFilter] = useState<FilterType>(filterList[0]);
+
   // Остальные фильтры
   const [filters, setFilters] = useState<FilterType[]>(filterList.slice(1));
+
   // Включены ли остальные фильтры
   const allActive = useMemo(() => filters.filter((filt) => filt.active).length === filters.length, [filters]);
+
   // Нужно ли включить фильтр "Все"
   const oneToTrigger = useMemo(() => filters.filter((filt) => filt.active).length === filters.length - 1, [filters]);
 
@@ -64,13 +31,11 @@ const Filter: FC = () => {
     if (oneToTrigger) setAllFilter((prev) => ({ ...prev, active: false }));
   }, [oneToTrigger]);
 
-  // При изменении состояния остальных фильтров, обновляем список активных фильтров в сторе
+  const activeAliases = useMemo(() => filters.filter((filter) => filter.active), [filters]);
+
   useEffect(() => {
-    dispatch({
-      type: APPLY_FILTER,
-      payload: filters.filter((filt) => filt.active).map(({ alias }) => alias),
-    });
-  }, [filters, dispatch]);
+    setFilterStore(activeAliases.map(({ alias }) => alias) as FilterGuard[]);
+  }, [activeAliases, setFilterStore]);
 
   // Переключение фильтра "Все"
   const changeAllFilter = (activeStatus: boolean) => {

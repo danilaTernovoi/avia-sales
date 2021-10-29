@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { buildTime, formatPrice } from '../../libs';
+import React, { FC, memo } from 'react';
+import { buildTime, formatPrice } from '../../utils';
 import { ITicket } from '../../types';
 import './Ticket.scss';
 
@@ -62,4 +62,4 @@ const Ticket: FC<ITicketProps> = ({ ticket }) => {
   );
 };
 
-export default Ticket;
+export default memo(Ticket, () => true);
