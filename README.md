@@ -1,1 +1,1 @@
-https://avia-sales-ot87q1rv8-danilaternovoi.vercel.app/
+https://avia-sales-indol.vercel.app/
